@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block content %}
+{% from '_formhelpers.html' import render_field %}
+
+<div class="bg-info text-center h1">Register Customer</div>
+<div class="container">
+    <form action="" method="POST">
+        {{ form.csrf_token }}
+            <div>
+                {{ render_field(form.name, class="form-control") }}
+                {{ render_field(form.username, class="form-control") }}
+                {{ render_field(form.email, class="form-control") }}
+                {{ render_field(form.password, class="form-control") }}
+                {{ render_field(form.confirm, class="form-control") }}
+            </div>
+            <div class="mt-5">
+                <!-- <input type=submit value="Register" class="btn btn-info mt-2"> -->
+                {{ form.submit }}
+            </div>
+    </form>
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+{% block content %}
+{% include 'navbar.html' %}
+
+
+<div class="container mt-4">
+    {% include '_message.html' %}
+    <div class="row">
+        <div class="col-md-12">
+            Invoice: {{orders.invoice}}
+            <br>
+            Status: {{orders.status}}
+            <br>
+            Customer Name: {{customer.name}}
+            <br>
+            Customer email: {{customer.email}}
+            <br>
+            <br>
+            <table class="table table-sm">
+            <thead>
+                <th>Sr</th>
+                <th>Name</th>
+                <th>Price (VNĐ)</th>
+                <th>Quantity</th>
+                <th>Discount</th>
+                <th>Subtotal (VNĐ)</th>
+            </thead>
+            <tbody>
+                {% for key , product in orders.orders.items() %}
+                {% set discount = "%0.2f" |format((product.discount/100) * product.price|float) %}
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td>{{product.name}}</td>
+                    <form action="{{url_for('updatecart', id=key)}}" method="POST">
+                    <td>{{product.price}}</td>
+                    <td>{{product.quantity}}</td>
+                    {% if product.discount > 0 %}
+                    <td>{{product.discount}} %</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    {% set subtotal = product.quantity|int * product.price|float %}
+                    <td>{{"%0.2f"|format((subtotal|float) - discount|float)}}</td>
+                    
+                </form>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td></td>
+                    <td style="width: 20%;"></td>
+                    <td colspan="4" class="text-right"><h5>Grand Total: {{grandTotal}} VNĐ</h5></td>
+                    
+                </tr>
+            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+

@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+{% block content %}
+{% include 'navbar.html' %}
+
+
+<div class="container mt-4">
+    {% include '_message.html' %}
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-sm">
+            <thead>
+                <th>Sr</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Price (VNĐ)</th>
+                <th>Quantity</th>
+                <th>Discount</th>
+                <th>Subtotal (VNĐ)</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </thead>
+            <tbody>
+                {% for key , product in session['ShoppingCart'].items() %}
+                {% set discount = "%0.2f" |format((product.discount/100) * product.price|int) %}
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td><img src="{{url_for('static', filename='images/'+product.image)}}" alt="{{product.name}}" width="50" height="45"></td>
+                    <td>{{product.name}}</td>
+                    <form action="{{url_for('updatecart', id=key)}}" method="POST">
+                    <td>{{product.price}}</td>
+                    <td><input type="number" value="{{product.quantity}}" name="quantity" min="1" max="10"></td>
+                    {% if product.discount > 0 %}
+                    <td>{{product.discount}} %</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    {% set subtotal = product.quantity|int * product.price|int %}
+                    <td>{{(subtotal|float - discount|float)}}</td>
+                    <td><button type="submit" class="btn btn-sm btn-info">Update</button></td>
+                </form>
+                    <td><a href="{{url_for('deleteitem', id=key)}}" class="btn btn-sm btn-danger">Delete</a></td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td></td>
+                    <td><a href="{{url_for('get_order')}}" class="btn btn-sm float-left btn-success ">Order Now</a></td>
+                    <td style="width: 20%;"></td>
+                    <td colspan="4" class="text-right"><h5>Grand Total: {{grandtotal}} VNĐ</h5></td>
+                    <td><a href="{{url_for('clearcart')}}" class="btn btn-danger btn-sm float-right">Clear cart</a></td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
